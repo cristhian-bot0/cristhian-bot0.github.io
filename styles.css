@@ -1192,3 +1192,21 @@ img { max-width: 100%; display: block; }
     flex-wrap: wrap;
   }
 }
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cursor-glow,
+  .particle,
+  .hero-bg-grid {
+    display: none !important;
+  }
+}

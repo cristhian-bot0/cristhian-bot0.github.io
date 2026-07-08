@@ -7,7 +7,19 @@ const preloaderMessages = [
   'ready.'
 ];
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const alreadyVisited = sessionStorage.getItem('visited');
+
 (async function runPreloader() {
+  // Skip the intro on repeat visits (this session) or if the user prefers reduced motion.
+  if (alreadyVisited || prefersReducedMotion) {
+    preloader.classList.add('done');
+    document.body.style.overflow = '';
+    initAll();
+    return;
+  }
+  sessionStorage.setItem('visited', '1');
+  document.body.style.overflow = 'hidden';
   for (const msg of preloaderMessages) {
     preloaderText.textContent = '';
     for (let i = 0; i < msg.length; i++) {
@@ -22,8 +34,6 @@ const preloaderMessages = [
   initAll();
 })();
 
-document.body.style.overflow = 'hidden';
-
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
@@ -32,17 +42,21 @@ function sleep(ms) {
 function initAll() {
   initTerminalTyping();
   initScrollProgress();
-  initCursorGlow();
   initNavToggle();
   initNavActive();
   initProjectFilter();
   initScrollReveal();
   initNavbarShrink();
-  initGlitch();
-  initParallax();
   initTiltCards();
   initCountUp();
-  initParticles();
+
+  // Decorative motion — skip when the user prefers reduced motion.
+  if (!prefersReducedMotion) {
+    initCursorGlow();
+    initGlitch();
+    initParallax();
+    initParticles();
+  }
 }
 
 // ===== Terminal Typing =====
